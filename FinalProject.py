@@ -48,7 +48,7 @@ def fashion_scatter(x, colors):
 
     return f, ax, sc, txts
 
-
+############################ NEW PAGE
 
 nominal_converter = {'class': {"present" : 1, "absent" : 0}}
 
@@ -66,9 +66,8 @@ subsection = 20000
 features = df.iloc[:subsection, :-1]
 labels = df['class'][:subsection]
 
-print(labels)
+#-- HISTOGRAMS AND PLOTS
 
-# histograms and plots
 fig = plt.figure(figsize = (8,6))
 plt.title('Age of patients grouped by class')
 df.hist(ax=fig.gca(),  column="age", by="class")
@@ -79,11 +78,13 @@ plt.title('Resting blood pressure of patients grouped by class')
 df.boxplot(ax=fig.gca(),column="resting_blood_pressure", by="class", vert=False)
 plt.show()
 
+#-- PCA
 time_start = time.time()
 pca = PCA(n_components=4)
-pca_result = pca.fit_transform(features)
+pca_result = pca.fit_transform(df.iloc[:subsection, :])
 
 print ('PCA done! Time elapsed: {} seconds'.format(time.time()-time_start))
+
 
 pca_df = pd.DataFrame(columns = ['pc1', 'pc2'])
 pca_df['pc1'] = pca_result[:,0]
@@ -91,11 +92,11 @@ pca_df['pc2'] = pca_result[:,1]
 pca_df['pc3'] = pca_result[:,2]
 pca_df['pc4'] = pca_result[:,3]
 print(pca.explained_variance_ratio_)
-
-
 # plot PCA first 2 components
 fashion_scatter(pca_df[['pc1','pc2']].values, np.multiply(np.array(labels), 4))
 
+
+#-- MODEL AND CONFUSION MATRIX
 params = {'kernel_type': 'linear', 'test_size': 0.15, 'subsample_size': subsection, 'random_state': 123}
 
 # non_pca
@@ -155,5 +156,4 @@ sns.heatmap(confusion_mat.T,
 
 bottom, top = ax.get_ylim()
 ax.set_ylim(bottom + 0.5, top - 0.5)
-
 plt.show()
