@@ -1,0 +1,31 @@
+{'kernel_type': 'linear', 'test_size': 0.15, 'subsample_size': 2000, 'random_state': 123} 
+This is before normalization of dataframe parameters, step 1
+Accuracy: 0.87
+Precision: 0.808
+Recall: 0.8706896551724138
+
+Fitting done, time: 82.78656578063965 seconds
+{'kernel_type': 'linear', 'test_size': 0.15, 'subsample_size': 10000, 'random_state': 123} 
+This is before normalization of dataframe parameters, step 2
+Accuracy: 0.8726666666666667
+Precision: 0.872093023255814
+Recall: 0.8215962441314554
+
+Fitting done, time: 360.81468772888184 seconds
+{'kernel_type': 'linear', 'test_size': 0.15, 'subsample_size': 20000, 'random_state': 123} 
+This is before normalization of dataframe parameters, step 3
+Accuracy: 0.8826666666666667
+Precision: 0.8686949559647719
+Recall: 0.852317360565593
+
+1.png
+Loading Model from File
+Fitting done, time: 0.003954648971557617 seconds
+{'kernel_type': 'linear', 'test_size': 0.15, 'subsample_size': 20000, 'random_state': 123} 
+Accuracy: 0.8826666666666667
+Precision: 0.8686949559647719
+Recall: 0.852317360565593
+
+Nov 26th
+https://towardsdatascience.com/dive-into-pca-principal-component-analysis-with-python-43ded13ead21
+using standard scaling, we adjust the data so all variances are equal to 1.
