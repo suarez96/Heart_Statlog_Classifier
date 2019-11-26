@@ -1,23 +1,17 @@
 import os
 import numpy as np
-import cv2
 import pickle
 import time
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patheffects as PathEffects
-import statistics
-from sklearn.preprocessing import StandardScaler
-
+from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn import metrics, svm
-import seaborn as sns
 from sklearn.metrics import confusion_matrix
 from mlxtend.plotting import plot_decision_regions
-
-%matplotlib inline
-
 import seaborn as sns
+
 sns.set_style('darkgrid')
 sns.set_palette('muted')
 sns.set_context("notebook", font_scale=1.5,
@@ -63,18 +57,14 @@ df = pd.read_csv('BNG_heart-statlog.csv')
 #convert nominal to numerical
 df.replace(nominal_converter, inplace = True)
 
-# standardize vars
-scaler=StandardScaler()
-scaler.fit(df)
 
 # subset of dataset to test visualization
 subsection = 20000
 
 # nov 26th
-print(scaler.transform(df).shape)
 # split into inputs and outputs
-features = scaler.transform(df)[:subsection, :-1]
-labels = scaler.transform(df)[:subsection, -1:]
+features = df.iloc[:subsection, :-1]
+labels = df['class'][:subsection]
 
 print(labels)
 
@@ -88,9 +78,6 @@ fig = plt.figure(figsize = (9,6))
 plt.title('Resting blood pressure of patients grouped by class')
 df.boxplot(ax=fig.gca(),column="resting_blood_pressure", by="class", vert=False)
 plt.show()
-
-
-from sklearn.decomposition import PCA
 
 time_start = time.time()
 pca = PCA(n_components=4)
@@ -125,6 +112,8 @@ train_features, test_features, train_labels, test_labels = train_test_split(pca_
 
 model_file = 'svm_model_' + str(params['subsample_size']) + '.pickle'
 
+
+details = "\n"
 print(params, details)
 
 time_start = time.time()
@@ -147,8 +136,6 @@ print ('Fitting done, time: {} seconds'.format(time.time() - time_start))
 
 predictions = model.predict(test_features)
 
-details = "\n"
-
 print("Accuracy:", metrics.accuracy_score(test_labels, predictions))
 print("Precision:", metrics.precision_score(test_labels, predictions))
 print("Recall:", metrics.recall_score(test_labels, predictions))
@@ -168,19 +155,5 @@ sns.heatmap(confusion_mat.T,
 
 bottom, top = ax.get_ylim()
 ax.set_ylim(bottom + 0.5, top - 0.5)
-ax.text()
 
-plt.title("Predicted Presence of Heart Disease: Confusion Matrix")
-plt.xlabel('Ground Truth')
-plt.ylabel('Predicted')
-
-# Plot Decision Region using mlxtend's awesome plotting function
-plot_decision_regions(X=test_features,
-                      y=test_labels,
-                      clf=model,
-                      legend=test_features.shape[1])
-
-# Update plot object with X/Y axis labels and Figure Title
-plt.xlabel(test_features.columns[0], size=14)
-plt.ylabel(test_labels.columns[1], size=14)
-plt.title('SVM Decision Region Boundary', size=16)
+plt.show()
