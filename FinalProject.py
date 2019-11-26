@@ -11,13 +11,25 @@ from sklearn import metrics, svm
 from sklearn.metrics import confusion_matrix
 from mlxtend.plotting import plot_decision_regions
 import seaborn as sns
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
+import warnings
+warnings.filterwarnings("ignore")
+
+params = {'kernel_type': 'linear',
+          'test_size': 0.15,
+          'subsample_size': 20000,
+          'pca' : False,
+          'random_state': 123}
 
 sns.set_style('darkgrid')
 sns.set_palette('muted')
 sns.set_context("notebook", font_scale=1.5,
                 rc={"lines.linewidth": 2.5})
-RS = 123
 
+print(params)
+
+#--FASHION SCATTER FUNCTION
 def fashion_scatter(x, colors):
     # choose a color palette with seaborn.
     num_classes = len(np.unique(colors))
@@ -48,7 +60,7 @@ def fashion_scatter(x, colors):
 
     return f, ax, sc, txts
 
-############################ NEW PAGE
+#-- MAKE INPUTS AND OUTPUTS
 
 nominal_converter = {'class': {"present" : 1, "absent" : 0}}
 
@@ -58,13 +70,10 @@ df = pd.read_csv('BNG_heart-statlog.csv')
 df.replace(nominal_converter, inplace = True)
 
 
-# subset of dataset to test visualization
-subsection = 20000
-
 # nov 26th
 # split into inputs and outputs
-features = df.iloc[:subsection, :-1]
-labels = df['class'][:subsection]
+features = df.iloc[:params['subsample_size'], :-1]
+labels = df['class'][:params['subsample_size']]
 
 #-- HISTOGRAMS AND PLOTS
 
@@ -81,8 +90,8 @@ plt.show()
 #-- PCA
 time_start = time.time()
 pca = PCA(n_components=4)
-pca_result = pca.fit_transform(df.iloc[:subsection, :])
-
+pca_result = pca.fit_transform(features)
+print(pca_result.shape)
 print ('PCA done! Time elapsed: {} seconds'.format(time.time()-time_start))
 
 
@@ -95,23 +104,26 @@ print(pca.explained_variance_ratio_)
 # plot PCA first 2 components
 fashion_scatter(pca_df[['pc1','pc2']].values, np.multiply(np.array(labels), 4))
 
-
 #-- MODEL AND CONFUSION MATRIX
-params = {'kernel_type': 'linear', 'test_size': 0.15, 'subsample_size': subsection, 'random_state': 123}
 
-# non_pca
-# train_features, test_features, train_labels, test_labels = train_test_split(features,
-#                                                                            labels,
-#                                                                            test_size=params['test_size'],
-#                                                                            random_state=params['random_state'])
+if params['pca']:
+    train_features, test_features, train_labels, test_labels = train_test_split(pca_df[['pc1', 'pc2']].values,
+                                                                                labels,
+                                                                                test_size=params['test_size'],
+                                                                                random_state=params['random_state'])
 
-# pca
-train_features, test_features, train_labels, test_labels = train_test_split(pca_df[['pc1', 'pc2']].values,
-                                                                            labels,
-                                                                            test_size=params['test_size'],
-                                                                            random_state=params['random_state'])
+else:
+    train_features, test_features, train_labels, test_labels = train_test_split(features,
+                                                                                labels,
+                                                                                test_size=params['test_size'],
+                                                                                random_state=params['random_state'])
 
-model_file = 'svm_model_' + str(params['subsample_size']) + '.pickle'
+
+model_file = 'svm_model_' + \
+             str(params['kernel_type']) + '_' + \
+             str(params['subsample_size']) + \
+             str('_pca' if params['pca'] else '_no_pca') + \
+            '.pickle'
 
 
 details = "\n"
@@ -157,3 +169,30 @@ sns.heatmap(confusion_mat.T,
 bottom, top = ax.get_ylim()
 ax.set_ylim(bottom + 0.5, top - 0.5)
 plt.show()
+
+
+#-- PIPELINE
+
+'''
+# fix pipeline for testing BEFORE uncommenting
+# https://towardsdatascience.com/visualizing-support-vector-machine-decision-boundary-69e7591dacea
+pipe_steps = [('pca', PCA()), ('SVM', SVC(kernel=params['kernel_type']))]
+pipeline = Pipeline(pipe_steps)
+
+from tqdm import tqdm_notebook as tqdm
+
+search_space = {
+    'pca__n_components' : [2, 3, 4]
+}
+
+for cv  in tqdm(range(4,6)):
+    create_grid = GridSearchCV(pipeline, param_grid=search_space, cv=cv)
+    create_grid.fit(train_features, train_labels)
+    print("Score for {}".format(cv, create_grid.score(test_labels, predictions)))
+    print(create_grid.best_params_)
+    
+print("DONE pipeline training!")
+
+'''
+
+#-- PLOT DECISION BOUNDARY
