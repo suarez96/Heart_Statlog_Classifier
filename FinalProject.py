@@ -17,9 +17,9 @@ import warnings
 warnings.filterwarnings("ignore")
 
 params = {'kernel_type': 'linear',
-          'test_size': 0.30,
-          'subsample_size': 1000,
-          'pca' : False,
+          'test_size': 0.15,
+          'subsample_size': 20000,
+          'pca' : True,
           'random_state': 123}
 
 sns.set_style('darkgrid')
@@ -87,42 +87,40 @@ plt.title('Resting blood pressure of patients grouped by class')
 df.boxplot(ax=fig.gca(),column="resting_blood_pressure", by="class", vert=False)
 plt.show()
 
-#-- PCA
+# -- PCA
 time_start = time.time()
 pca = PCA(n_components=13)
 pca_intermediate = pca.fit(features)
 pca_result = pca_intermediate.transform(features)
 print('pca shape', pca_result.shape)
-print ('PCA done! Time elapsed: {} seconds'.format(time.time()-time_start))
+print('PCA done! Time elapsed: {} seconds'.format(time.time() - time_start))
 
-
-pca_df = pd.DataFrame(columns = ['pc1', 'pc2'])
+pca_df = pd.DataFrame(columns=['pc1', 'pc2'])
 pca_df['pc1'] = pca_result[:, 0]
 pca_df['pc2'] = pca_result[:, 1]
 pca_df['pc3'] = pca_result[:, 2]
 pca_df['pc4'] = pca_result[:, 3]
 print(pca.explained_variance_ratio_)
-# plot PCA first 2 components
-fashion_scatter(pca_df[['pc1','pc2']].values, np.multiply(np.array(labels), 4))
 
-colordict = {0:'blue', 1:'green'}
-piclabel = {0:'Absent', 1:'Present'}
-markers = {0:'*', 1:'+'}
-alphas = {0:0.5, 1:0.5}
+colordict = {0: 'blue', 1: 'green'}
+piclabel = {0: 'Absent', 1: 'Present'}
+markers = {0: '*', 1: '+'}
+alphas = {0: 0.5, 1: 0.5}
 
 fig = plt.figure(figsize=(12, 7))
-plt.subplot(1,1,1)
+plt.subplot(1, 1, 1)
 for l in np.unique(labels):
-    ix = np.where(labels==l)[0]
+    ix = np.where(labels == l)[0]
     plt.scatter(pca_df['pc1'][ix], pca_df['pc2'][ix], c=colordict[l],
-               label=piclabel[l], s=40, marker=markers[l], alpha=alphas[l])
+                label=piclabel[l], s=40, marker=markers[l], alpha=alphas[l])
+
 plt.xlabel("First Principal Component", fontsize=15)
 plt.ylabel("Second Principal Component", fontsize=15)
 
 #-- MODEL AND CONFUSION MATRIX
 
 if params['pca']:
-    train_features, test_features, train_labels, test_labels = train_test_split(pca_df,
+    train_features, test_features, train_labels, test_labels = train_test_split(pca_df[['pc1', 'pc2']].values,
                                                                                 labels,
                                                                                 test_size=params['test_size'],
                                                                                 random_state=params['random_state'])
@@ -133,12 +131,11 @@ else:
                                                                                 test_size=params['test_size'],
                                                                                 random_state=params['random_state'])
 
+'''
 
-model_file = 'svm_model_' + \
-             str(params['kernel_type']) + '_' + \
-             str(params['subsample_size']) + \
-             str('_pca' if params['pca'] else '_no_pca') + \
-            '.pickle'
+model_file = 'svm_model_' + str(params['subsample_size']) + \
+    '_pca' if params['pca'] else '_no_pca' + \
+    '.pickle'
 
 
 details = "\n"
@@ -184,28 +181,35 @@ sns.heatmap(confusion_mat.T,
 bottom, top = ax.get_ylim()
 ax.set_ylim(bottom + 0.5, top - 0.5)
 plt.show()
+'''
+#-- PIPELINE
 
-# -- PIPELINE
 
+# fix pipeline for testing BEFORE uncommenting
 # https://towardsdatascience.com/visualizing-support-vector-machine-decision-boundary-69e7591dacea
 # pipe_steps = [('pca', pca), ('SVM', model)]
-pipe_steps = [('SVM', model)]
 
-pipeline = Pipeline(pipe_steps)
+model_1 = svm.SVC(gamma="scale")
+pipe_steps = [('SVM', model_1)]
+
+pipeline = Pipeline(pipe_steps, verbose=True)
 
 from tqdm import tqdm_notebook as tqdm
 
-search_space = {
-    # 'pca__n_components' : [2, 13],#, 4, 13],
-    'SVM__max_iter': [100, 1000]
-}
 
-for cv in tqdm(range(2, 8)):
-    create_grid = GridSearchCV(pipeline, param_grid=search_space, cv=cv)
-    create_grid.fit(train_features, train_labels)
-    print("Score for {} fold cross-validation : {}".format(cv, create_grid.score(test_features, test_labels)))
-    print(create_grid.best_params_)
+search_space = {'kernel':('poly', 'rbf'),
+                'C':[1, 10, 100, 1000],
+                'max_iter' : [1000, 5000, 10000]
+               }
+
+
+cross_val_grid = GridSearchCV(model_1, search_space, cv=2)
+cross_val_grid.fit(train_features, train_labels)
+cv_results = pd.DataFrame(cross_val_grid.cv_results_)
 
 print("DONE pipeline training!")
+
+display(cv_results.sort_values(['rank_test_score']))
+
 
 #-- PLOT DECISION BOUNDARY
