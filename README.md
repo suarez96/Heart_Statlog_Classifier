@@ -25,8 +25,23 @@ After this, I decided on the models that I wanted to compare for this particular
 - Random Forests because if the relationships are not of high order, the model will perform better, train faster and scale to a larger subset of the data with more accuracy.
 
 #### Model Training
-As mentioned previously, we could use the SVM 'kernel trick' to predict with almost no data preparation. And we can see below that after only a only a few tuned hyperparameters. The SVM already classifies the small subset with high accuracy. Below is the confusion matrix with details on the particular test.
+As mentioned previously, we could use the SVM 'kernel trick' to predict with almost no data preparation. And we can see below that after only a only a few tuned hyperparameters. The SVM already classifies the small subset with high accuracy. Below is the confusion matrix with 20000 samples and a radial basis function kernel.
 
-![Starting Point](presentation/1.png) 
+![Starting Point](1.png) 
 
 
+#### Hyperparameter Tuning
+In this section, we will describe a series of concise steps taken in an attempt to increase the model accuracy and scale it to the desired size of one million entries (the entire test set). I used the parameters in the best trainings to fine tune my svm for the following group of trainings. For this, I made great use of the _GridSearchCV_ library and greatly appreciate the efficiency that it granted the workflow in this project through automation; For simple machine learning tasks, I highly recommend it.  In any case: the steps (almost all of them, at least) we followed for tuning were as follows:
+
+- We increased the sample size from _20000 to 40000_ and added the default _3rd degree polynomial_ kernel to our kernel searchspace parameters. We used a _slack variable selection of 10, 50 and 100_ as well as a selection of _1k, 5k and 10k for maximum number of iterations. We started the tuning by using a _2 fold cross validation_ in our grid search. Training time: 5 min, 46 s.
+
+![Initial Tuning](3.png)
+
+- From these results we increased the resolution of the _slack variable to go from 10-100_ in increments of 10, and changed the _max iterations to 5k, 7.5k, and 10k_. Training time: 23 min, 18 s.
+
+![Increased Slack Resolution](4.png)
+
+
+- Then we increased _2 fold validation to 3 fold validation_ in an attempt to check for overfitting. Training time: 2 min, 10 s.
+
+![3 fold](5.png)
