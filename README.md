@@ -16,7 +16,7 @@ We can easily fix this problem by using a nominal converter to get numerical out
 
 ![Starting2](presentation/numerical_data.png)
 
-After we've done our initial exploration, we continue by looking at visualizations of what I think are intuitive relationships. In this case, I looked at the distribution of ages among both classes. Here we can see that, although not a deciding factor, the age distributions of both classes are, in fact, slightly different. We can also see that the spreads of resting heart rates are similar among both classes but not identical.
+After we've done our initial exploration, we continue by looking at visualizations of what I think are intuitive relationships. In this case, I looked at the distribution of ages among both classes. Here we can see that, although not a deciding factor, the age distributions of both classes are, in fact, slightly different. We can also see that the spreads of resting blood pressure among groups are similar among both classes but not identical.
 
 ![Starting Point](presentation/init_graphs.png) 
 
