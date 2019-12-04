@@ -30,7 +30,7 @@ As mentioned previously, we could use the SVM 'kernel trick' to predict with alm
 ![Starting Point](1.png) 
 
 
-#### Hyperparameter Tuning
+#### SVM Tuning
 In this section, we will describe a series of concise steps taken in an attempt to increase the model accuracy and scale it to the desired size of one million entries (the entire test set). I used the parameters in the best trainings to fine tune my svm for the following group of trainings. For this, I made great use of the _GridSearchCV_ library and greatly appreciate the efficiency that it granted the workflow in this project through automation; For simple machine learning tasks, I highly recommend it.  In any case: the steps (almost all of them, at least) we followed for tuning were as follows:
 
 - We increased the sample size from _20000 to 40000_ and added the default _3rd degree polynomial_ kernel to our kernel searchspace parameters. We used a _slack variable selection of 10, 50 and 100_ as well as a selection of _1k, 5k and 10k for maximum number of iterations. We started the tuning by using a _2 fold cross validation_ in our grid search. Training time: 5 min, 46 s.
@@ -72,3 +72,26 @@ We can see that the increase in samples fed into the SVM training drastically to
 - When PCA filled, I tried undersampling AND oversampling techniques to see if it was an class imbalance problem. For undersampling I used random undersampling, which takes a random subset of the _majority_ class of equal size to the under-represented class to account for the imbalance. For oversampling, I used scikit-learns implementation of **S**ynthetic **M**inority **O**versampling **TE**chiniques (SMOTE) and applied it to the _minority_ class. This technique uses points in the minority class, calculates a difference vector to each of its K-nearest neighbors, then creates a new data point somewhere along the axis using the product of the difference vector and a random number between 0 and 1.
 
 No combination of these techniques produced more adequate results, so I turned my attention to my second machine learning algorithm: the **Random Forest Classifier**.
+
+#### Random Forest Tuning
+- After the initial tuning stages of the random forest, I arrived suprisingly quickly at an acceptable classifier for a _sample size of 10000_ with smote upsampling and _a 4-fold cross validation_.
+
+![rf 10000 init upsample cm](11.png)
+
+
+- Maintaining the upsampling technique, I scaled the sample size from _10k to 100k samples_ and wanted to see how our new classifier would perform at the same size that our SVM went awry. In our search space, we used _100, 500, and 1000 as our number of estimators_, we used _None (Default), 16, and 64 as our max leaf nodes_ and _None (Default, 8 and 16) as our max depth parameter_. Essentially I wanted to see if there was a way that we could maximize our accuracy metrics while using effective parameters for a shorter training time.
+
+![rf 100000 upsample](13.png)
+![rf 100000 upsample cm](12.png)
+
+- From the results above, I noticed that increasing the estimators from 500 and 1000 had no real impact on accuracy but doubled our training time. As such, I decided to see if I could improve the estimator on streamlined parameters by running the same training on  the _PCA-fit-transformed_ data. My streamlined parameters were _n_estimators: 500, 1000 (honestly probably just forgot to remove the 1000)_ and _max depth 16 and None_.
+
+
+![rf streamlined pca](14.png)
+![rf streamlined pca cm](15.png)
+
+- I also in parallel ran a training with the same search space but _without PCA_ and with _downsampled_ data. The results were inline with the non-pca results with upsampling from the step above.
+
+
+![rf streamlined no pca](16.png)
+![rf streamlined no pca cm](17.png)
