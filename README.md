@@ -1,6 +1,7 @@
 SVM vs Random Forest?
 ====================
-
+C. Augusto Suarez: University of New Brunswick, Dec 2019
+----------
 
 This project is a Comparison of a support vector machine and a random forest classifier on the same dataset: the BNG_Heart_Statlog data from openml, containing one million entries  of 13 features and a 14th "class" column. It is a python built project using jupyter notebooks. The necessary enviornment can be built from the heart_statlog.yml file included. Aim to classify heart disease Absence/0 or Presence/1 
 
@@ -103,7 +104,22 @@ No combination of these techniques produced more adequate results, so I turned m
 ![final forest](18.png)
 ![final forest cm](19.png)
 
-#### Results
-The final random forest model performs well over my desired target (80%) and was able to scale to the entire 1 million data points!
+The Results
+--------
+
+The final random forest model performs well over my desired target (80%) and was able to scale to the entire 1 million data points! It trained in a very reasonable time and generalized well to our hold out sets over 4 Fold Cross Validation. With more data preparation and tuning I am sure that I could achieve an even better result. But this is satisfactory for now.
+
+One More Thing
+---------
+Remember those last 10 data points that I held out from our dataset? I wanted to to see, if I took the last 10 points and laid out their ground truths, what the model would predict about them. This was more of a whimsical excercise than an actual motivated research technique, but it was still an interesting thought. The results are below:
 
 ![final test](20.png)
+
+As was expected with a 90% model, the random forest classifier correctly categorized 9 out the 10 last data entries. And with that, I conclude my first investigation on the heart_statlog dataset. But now it's obvious that I should ask: what else could I do? Well, with the work that's already been done, I can think of a few things that might improve our random forest classifier:
+- cleaning our data with other techniques
+- seeing what techniques like varimax rotation could do to our PCA's. For that matter, seeing how we could take advantage of the PCA's in any way! Seeing as the drastically decreased our training time
+- Trying other sampling techniques such as ADASYN or maybe a _non_-random undersampling
+- Running a slightly modified random forest algorithm, such as a boosted tree
+
+
+Maybe I'll come back to this at a later stage but for now, these results suffice.
