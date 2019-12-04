@@ -32,7 +32,7 @@ As mentioned previously, we could use the SVM 'kernel trick' to predict with alm
 
 
 #### SVM Tuning
-In this section, we will describe a series of concise steps taken in an attempt to increase the model accuracy and scale it to the desired size of one million entries (the entire test set). I used the parameters in the best trainings to fine tune my svm for the following group of trainings. For this, I made use of the _GridSearchCV_ library and greatly streamlined our workflow through its automation functionalities; For simple machine learning tasks, I highly recommend it.  In this case: the steps (almost all of them, at least) we followed for tuning were as follows:
+In this section, we will describe a series of concise steps taken in an attempt to increase the model accuracy and scale it to the desired size of one million entries (the entire test set). I used the parameters in the best trainings to fine tune my svm for the following group of trainings. For this, I made use of the _GridSearchCV_ library which greatly streamlined my workflow because of its capacity to automate several trainings at once; For simple machine learning tasks, I highly recommend it.  In this case: the steps (almost all of them, at least) we followed for tuning were as follows:
 
 - We increased the sample size from _20000 to 40000_ and added the default _3rd degree polynomial_ kernel to our kernel searchspace parameters. We used a _slack variable selection of 10, 50 and 100_ as well as a selection of _1k, 5k and 10k for maximum number of iterations_. We started the tuning by using a _2 fold cross validation_ in our grid search. Training time: 5 min, 46 s.
 
