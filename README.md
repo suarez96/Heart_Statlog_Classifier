@@ -84,14 +84,26 @@ No combination of these techniques produced more adequate results, so I turned m
 ![rf 100000 upsample](13.png)
 ![rf 100000 upsample cm](12.png)
 
-- From the results above, I noticed that increasing the estimators from 500 and 1000 had no real impact on accuracy but doubled our training time. As such, I decided to see if I could improve the estimator on streamlined parameters by running the same training on  the _PCA-fit-transformed_ data. My streamlined parameters were _n_estimators: 500, 1000 (honestly probably just forgot to remove the 1000)_ and _max depth 16 and None_.
+- From the results above, I noticed that increasing the estimators from 500 and 1000 had no real impact on accuracy but doubled our training time. As such, I decided to see if I could improve the estimator on streamlined parameters by running the same training on  the _PCA-fit-transformed_ data. My streamlined parameters were _n_estimators: 500, 1000 (honestly probably just forgot to remove the 1000)_ and _max depth 16 and None_. Training time: 3 min, 28 s
 
 
 ![rf streamlined pca](14.png)
 ![rf streamlined pca cm](15.png)
 
-- I also in parallel ran a training with the same search space but _without PCA_ and with _downsampled_ data. The results were inline with the non-pca results with upsampling from the step above.
+- I also in parallel ran a training with the same search space but _without PCA_ and with _downsampled_ data. The results were inline with the non-pca results with upsampling from the step above. Training time: 32 min, 32 s
 
 
 ![rf streamlined no pca](16.png)
 ![rf streamlined no pca cm](17.png)
+
+**Note: with the same parameters, PCA (as expected) ran in a MUCH faster training time, but had a drastic loss in accuracy, so the time gain is less enticing.**
+
+- Now the big one: I let the model sit overnight with our streamlined parameters {'n_estimators' : [500], 'max_leaf_nodes' : [None], 'max_depth' : [16] } and on the entire dataset (minus 10, actually, for a reason that will be explained later). Training time: 2 hours, 13 min, 38 s.
+
+![final forest](18.png)
+![final forest cm](19.png)
+
+#### Results
+The final random forest model performs well over my desired target (80%) and was able to scale to the entire 1 million data points!
+
+![final test](20.png)
