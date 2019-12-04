@@ -57,3 +57,7 @@ In this section, we will describe a series of concise steps taken in an attempt 
 ![rbf sigmoid](7.png)
 ![rbf sigmoid cm and cr](8.png)
 
+- Here is where I wanted to see if the model would scale up. As such, I decided to _increase to sample size from 40000 samples to 100,000 samples_. and let it run over night. I was also using only 'rbf' for the kernel parameter and a slack variable selction of 80-100 in increments of 5. Training time: 33 min, 32 s.
+
+![svm 100000](9.png)
+![svm 100000 cm and cr](10.png)
