@@ -12,7 +12,7 @@ We take an initial gander at the dataset and observe 13 features as input, with 
 
 ![Starting Point](presentation/nominal_data.png) 
 
-We can easily fix this problem by using a nominal converter so that we get a numerical output instead. As follows:
+We can easily fix this problem by using a nominal converter to get numerical output instead. Seen below:
 
 ![Starting2](presentation/numerical_data.png)
 
