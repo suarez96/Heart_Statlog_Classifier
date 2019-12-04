@@ -61,3 +61,14 @@ In this section, we will describe a series of concise steps taken in an attempt 
 
 ![svm 100000](9.png)
 ![svm 100000 cm and cr](10.png)
+
+#### Here we reach a point where we need to do some more work before we can continue scaling
+
+We can see that the increase in samples fed into the SVM training drastically took a toll on our accuracy metrics. This happens because as our training data increases, so do our number of support vectors, meaning that our classification boundaries have a harder time generalizing to unseen data. To attempt to fix this, I tried several approaches separately and in a pipeline.
+- The first thing I tried was a simple normalization: Every data point was normalized to mean 0 and standard deviation 1.
+
+- When this failed to make a noticeable impact, I looked at principal component analysis and attempted to train on the new transformed, pca-fit data. I also tried tuning the number of iterations that the PCA did on the data.
+
+- When PCA filled, I tried undersampling AND oversampling techniques to see if it was an class imbalance problem. For undersampling I used random undersampling, which takes a random subset of the _majority_ class of equal size to the under-represented class to account for the imbalance. For oversampling, I used scikit-learns implementation of **S**ynthetic **M**inority **O**versampling **TE**chiniques (SMOTE) and applied it to the _minority_ class. This technique uses points in the minority class, calculates a difference vector to each of its K-nearest neighbors, then creates a new data point somewhere along the axis using the product of the difference vector and a random number between 0 and 1.
+
+No combination of these techniques produced more adequate results, so I turned my attention to my second machine learning algorithm: the **Random Forest Classifier**.
