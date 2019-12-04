@@ -11,7 +11,9 @@ We take an initial gander at the dataset and observe 13 features as input, leadi
 ![Starting Point](presentation/nominal_data.png) 
 
 We can easily fix this problem by using a nominal converter so that we get a numerical and binary output instead. This looks as follows:
-![Starting Point](presentation/numerical_data.png)
+
+![Starting2](presentation/numerical_data.png)
 
 After we've done our initial exploration, we continue by looking at just some visualizations of what we think are important relationships. In this case, we look at the distribution of ages among both classes. Here we can see that, although not a deciding factor, the age distributions of both classes are, in fact, slightly different.
+
 ![Starting Point](presentation/init_graphs.png) 
