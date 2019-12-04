@@ -42,6 +42,11 @@ In this section, we will describe a series of concise steps taken in an attempt 
 ![Increased Slack Resolution](4.png)
 
 
-- Then we increased _2 fold validation to 3 fold validation_ in an attempt to check for overfitting. Training time: 2 min, 10 s.
+- Then we increased _2 fold validation to 3 fold validation_ in an attempt to check for overfitting, _slack of only 90, iterations of 7.5k_. Training time: 2 min, 10 s.
 
 ![3 fold](5.png)
+
+
+- Added 'linear' kernel to search space parameters and went up to _4 fold_ validation. Training time: 2 min, 46 s.
+
+![4 fold linear](6.png)
