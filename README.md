@@ -50,3 +50,10 @@ In this section, we will describe a series of concise steps taken in an attempt 
 - Added 'linear' kernel to search space parameters and went up to _4 fold_ validation. Training time: 2 min, 46 s.
 
 ![4 fold linear](6.png)
+
+
+- Removed 'linear' and 'poly' kernels from search space parameters and added sigmoid also to check. Confusion matrix and classification report to "see if model performs as advertised". Training time: 4 min, 12 s.
+
+![rbf sigmoid](7.png)
+![rbf sigmoid cm and cr](8.png)
+
