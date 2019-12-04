@@ -27,4 +27,6 @@ After this, I decided on the models that I wanted to compare for this particular
 #### Model Training
 As mentioned previously, we could use the SVM 'kernel trick' to predict with almost no data preparation. And we can see below that after only a only a few tuned hyperparameters. The SVM already classifies the small subset with high accuracy. Below is the confusion matrix with details on the particular test.
 
-![Starting Point](presentation/init_graphs.png) 
+![Starting Point](presentation/1.png) 
+
+
