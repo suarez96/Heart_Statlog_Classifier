@@ -3,27 +3,27 @@ SVM vs Random Forest?
 C. Augusto Suarez: University of New Brunswick, Dec 2019
 ----------
 
-This project is a Comparison of a support vector machine and a random forest classifier on the same dataset: the BNG_Heart_Statlog data from openml, containing one million entries  of 13 features and a 14th "class" column. It is a python built project using jupyter notebooks. The necessary enviornment can be built from the heart_statlog.yml file included. Aim to classify heart disease Absence/0 or Presence/1 
+This project is a Comparison of a support vector machine and a random forest classifier on the same dataset: the BNG_Heart_Statlog data from openml. This dataset contains one million entries of 13 features and a 14th "class" column: the Absence/0 or Presence/1 of heart disease in the subject. It is a python built project using jupyter notebooks and the necessary enviornment can be built from the heart_statlog.yml file included. 
 
 The Process
 ---------------
 #### Initial Visualizations
-We take an initial gander at the dataset and observe 13 features as input, leading to a binary classification: the presence or absence of heart disease. We can see that all of our input data is numerical, but our output data is categorical and of type string.
+We take an initial gander at the dataset and observe 13 features as input, with a binary output: the presence or absence of heart disease. We can see that all of our input data is numerical but our output data is categorical of type string.
 
 ![Starting Point](presentation/nominal_data.png) 
 
-We can easily fix this problem by using a nominal converter so that we get a numerical and binary output instead. This looks as follows:
+We can easily fix this problem by using a nominal converter so that we get a numerical output instead. As follows:
 
 ![Starting2](presentation/numerical_data.png)
 
-After we've done our initial exploration, we continue by looking at just some visualizations of what we think are important relationships. In this case, we look at the distribution of ages among both classes. Here we can see that, although not a deciding factor, the age distributions of both classes are, in fact, slightly different. We can also see that the spreads of resting heart rates are similar among both classes.
+After we've done our initial exploration, we continue by looking at visualizations of what I think are intuitive relationships. In this case, I looked at the distribution of ages among both classes. Here we can see that, although not a deciding factor, the age distributions of both classes are, in fact, slightly different. We can also see that the spreads of resting heart rates are similar among both classes but not identical.
 
 ![Starting Point](presentation/init_graphs.png) 
 
 #### Model Selection
-After this, I decided on the models that I wanted to compare for this particular dataset. Even though neural networks have had remarkable success classifying similar data, I wanted to try machine learning models that I was unfamiliar with, and so I chose to look at SVM's and Random Forests. 
-- SVM's because they have the ability to learn nonlinear relationships between features using kernel methods and for the same reason, we can test it earlier without having to preprocess our data excessively.
-- Random Forests because if the relationships are not of high order, the model will perform better, train faster and scale to a larger subset of the data with more accuracy.
+After this, I decided on the models that I wanted to compare for this particular dataset. Even though neural networks have had remarkable success classifying similar data, I wanted to try machine learning models that I had not implemented before so I chose to look at SVM's and Random Forests. 
+- SVM's because they have the ability to learn nonlinear relationships between features using kernel methods. We can also, for the same reason, test it earlier without having to preprocess our data excessively.
+- Random Forests because if the relationships are not of high order the model will perform better, train faster and scale to a larger subset of the data with more accuracy.
 
 #### Model Training
 As mentioned previously, we could use the SVM 'kernel trick' to predict with almost no data preparation. And we can see below that after only a only a few tuned hyperparameters. The SVM already classifies the small subset with high accuracy. Below is the confusion matrix with 20000 samples and a radial basis function kernel.
@@ -32,9 +32,9 @@ As mentioned previously, we could use the SVM 'kernel trick' to predict with alm
 
 
 #### SVM Tuning
-In this section, we will describe a series of concise steps taken in an attempt to increase the model accuracy and scale it to the desired size of one million entries (the entire test set). I used the parameters in the best trainings to fine tune my svm for the following group of trainings. For this, I made great use of the _GridSearchCV_ library and greatly appreciate the efficiency that it granted the workflow in this project through automation; For simple machine learning tasks, I highly recommend it.  In any case: the steps (almost all of them, at least) we followed for tuning were as follows:
+In this section, we will describe a series of concise steps taken in an attempt to increase the model accuracy and scale it to the desired size of one million entries (the entire test set). I used the parameters in the best trainings to fine tune my svm for the following group of trainings. For this, I made use of the _GridSearchCV_ library and greatly appreciate the efficiency that it granted the workflow in this project through automation; For simple machine learning tasks, I highly recommend it.  In any case: the steps (almost all of them, at least) we followed for tuning were as follows:
 
-- We increased the sample size from _20000 to 40000_ and added the default _3rd degree polynomial_ kernel to our kernel searchspace parameters. We used a _slack variable selection of 10, 50 and 100_ as well as a selection of _1k, 5k and 10k for maximum number of iterations. We started the tuning by using a _2 fold cross validation_ in our grid search. Training time: 5 min, 46 s.
+- We increased the sample size from _20000 to 40000_ and added the default _3rd degree polynomial_ kernel to our kernel searchspace parameters. We used a _slack variable selection of 10, 50 and 100_ as well as a selection of _1k, 5k and 10k for maximum number of iterations_. We started the tuning by using a _2 fold cross validation_ in our grid search. Training time: 5 min, 46 s.
 
 ![Initial Tuning](3.png)
 
@@ -70,7 +70,7 @@ We can see that the increase in samples fed into the SVM training drastically to
 
 - When this failed to make a noticeable impact, I looked at principal component analysis and attempted to train on the new transformed, pca-fit data. I also tried tuning the number of iterations that the PCA did on the data.
 
-- When PCA filled, I tried undersampling AND oversampling techniques to see if it was an class imbalance problem. For undersampling I used random undersampling, which takes a random subset of the _majority_ class of equal size to the under-represented class to account for the imbalance. For oversampling, I used scikit-learns implementation of **S**ynthetic **M**inority **O**versampling **TE**chiniques (SMOTE) and applied it to the _minority_ class. This technique uses points in the minority class, calculates a difference vector to each of its K-nearest neighbors, then creates a new data point somewhere along the axis using the product of the difference vector and a random number between 0 and 1.
+- When PCA failed, I tried undersampling AND oversampling techniques to see if it was an class imbalance problem. For undersampling I used random undersampling, which takes a random subset of the _majority_ class of equal size to the under-represented class to account for the imbalance. For oversampling, I used scikit-learn's implementation of **S**ynthetic **M**inority **O**versampling **TE**chiniques (SMOTE) and applied it to the _minority_ class. This technique uses points in the minority class, calculates the difference vector to each of its K-nearest neighbors, then creates a new data point somewhere along the axis using the product of the difference vector and a random number between 0 and 1.
 
 No combination of these techniques produced more adequate results, so I turned my attention to my second machine learning algorithm: the **Random Forest Classifier**.
 
@@ -116,8 +116,8 @@ Remember those last 10 data points that I held out from our dataset? I wanted to
 ![final test](20.png)
 
 As was expected with a 90% model, the random forest classifier correctly categorized 9 out the 10 last data entries. And with that, I conclude my first investigation on the heart_statlog dataset. But now it's obvious that I should ask: what else could I do? Well, with the work that's already been done, I can think of a few things that might improve our random forest classifier:
-- cleaning our data with other techniques
-- seeing what techniques like varimax rotation could do to our PCA's. For that matter, seeing how we could take advantage of the PCA's in any way! Seeing as the drastically decreased our training time
+- Cleaning our data with other techniques. Maybe a different feature extraction method using composite or filtered attributes.
+- Seeing what techniques like varimax rotation could do to our PCA's. For that matter, seeing how we could take advantage of the PCA's in any way! Seeing as the drastically decreased our training time
 - Trying other sampling techniques such as ADASYN or maybe a _non_-random undersampling
 - Running a slightly modified random forest algorithm, such as a boosted tree
 
