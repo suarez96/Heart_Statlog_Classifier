@@ -117,7 +117,7 @@ Remember those last 10 data points that I held out from our dataset? I wanted to
 
 As was expected with a 90% model, the random forest classifier correctly categorized 9 out the 10 last data entries. And with that, I conclude my first investigation on the heart_statlog dataset. But now it's obvious that I should ask: what else could I do? Well, with the work that's already been done, I can think of a few things that might improve our random forest classifier:
 - Cleaning our data with other techniques. Maybe a different feature extraction method using composite or filtered attributes.
-- Seeing what techniques like varimax rotation could do to our PCA's. For that matter, seeing how we could take advantage of the PCA's in any way! Seeing as the drastically decreased our training time
+- Seeing what techniques like varimax rotation could do to our PCA's. For that matter, seeing how we could take advantage of the PCA's in any way! Seeing as the dimensionality reduction drastically decreased our training time
 - Trying other sampling techniques such as ADASYN or maybe a _non_-random undersampling
 - Running a slightly modified random forest algorithm, such as a boosted tree
 
