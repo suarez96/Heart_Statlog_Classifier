@@ -3,7 +3,9 @@ SVM vs Random Forest?
 C. Augusto Suarez: University of New Brunswick, Dec 2019
 ----------
 
-This project is a Comparison of a support vector machine and a random forest classifier on the same dataset: the BNG_Heart_Statlog data from openml. This dataset contains one million entries of 13 features and a 14th "class" column: the Absence/0 or Presence/1 of heart disease in the subject. It is a python built project using jupyter notebooks and the necessary enviornment can be built from the heart_statlog.yml file included. 
+This project is a Comparison of a support vector machine and a random forest classifier on the same dataset: the BNG_Heart_Statlog data from OpenML. This dataset contains one million entries of 13 features and a 14th "class" column: the Absence/0 or Presence/1 of heart disease in the subject. It is a python built project using jupyter notebooks and the necessary enviornment can be built from the heart_statlog.yml file included. I also included the dataset for 2 reasons:
+- The dataset is small enough to upload to github
+- The dataset is already openly available on OpenML; For private datasets, I strongly believe that _the enclosed data should be protected and kept private under **all** circumstances_.
 
 The Process
 ---------------
