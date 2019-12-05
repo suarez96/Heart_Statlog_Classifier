@@ -12,15 +12,15 @@ The Process
 #### Initial Visualizations
 We take an initial gander at the dataset and observe 13 features as input, with a binary output: the presence or absence of heart disease. We can see that all of our input data is numerical but our output data is categorical of type string.
 
-![Starting Point](presentation/res/nominal_data.png?s=200)
+![Starting2](presentation/res/nominal_data.png)
 
 We can easily fix this problem by using a nominal converter to get numerical output instead. Seen below:
 
-![Starting2](presentation/res/numerical_data.png?s=200)
+![Starting2](presentation/res/numerical_data.png)
 
 After we've done our initial exploration, we continue by looking at visualizations of what I think are intuitive relationships. In this case, I looked at the distribution of ages among both classes. Here we can see that, although not a deciding factor, the age distributions of both classes are, in fact, slightly different. We can also see that the spreads of resting blood pressure are similar among both classes but not identical.
 
-![Starting Point](presentation/res/init_graphs.png?s=200) 
+![Starting Point](presentation/res/init_graphs.png) 
 
 #### Model Selection
 After this, I decided on the models that I wanted to compare for this particular dataset. Even though neural networks have had remarkable success classifying similar data, I wanted to try machine learning models that I had not implemented before so I chose to look at SVM's and Random Forests. 
